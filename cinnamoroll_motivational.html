@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mijn dagelijkse to-do lijst</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Fredoka & Quicksand for maximum kawaii vibe -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#bde0fe">
+  <style>
+    body {
+      font-family: 'Quicksand', sans-serif;
+      background-color: #f0f7ff;
+      /* Soft gingham grid pattern with floral accent backgrounds */
+      background-image: 
+        linear-gradient(90deg, rgba(255, 255, 255, 0.6) 50%, transparent 50%),
+        linear-gradient(rgba(255, 255, 255, 0.6) 50%, transparent 50%);
+      background-size: 36px 36px;
+    }
+
+    h1, h2, h3, .heading-font {
+      font-family: 'Fredoka', cursive, sans-serif;
+    }
+
+    /* Custom Checkbox Animation & Styling */
+    .custom-checkbox {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 28px;
+      height: 28px;
+      border: 2.5px solid currentColor;
+      border-radius: 10px;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      background-color: #ffffff;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .custom-checkbox:hover {
+      transform: scale(1.08);
+    }
+
+    .custom-checkbox:checked {
+      background-color: currentColor;
+      transform: scale(1.05);
+    }
+
+    .custom-checkbox:checked::after {
+      content: '✓';
+      color: white;
+      font-size: 19px;
+      font-weight: 800;
+      display: block;
+      line-height: 1;
+      animation: popCheck 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes popCheck {
+      0% { transform: scale(0) rotate(-20deg); opacity: 0; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+
+    /* Strikethrough effect when item is checked */
+    .todo-item:has(input:checked) .item-text {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    /* Floating mascot animation */
+    @keyframes floaty {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-8px) rotate(-3deg); }
+    }
+    .animate-float {
+      animation: floaty 4s ease-in-out infinite;
+    }
+
+    /* Subtle pulse animation for stars & flowers */
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .animate-pulse-slow {
+      animation: gentlePulse 3s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-3 sm:px-6 flex flex-col items-center justify-start relative overflow-x-hidden">
+
+  <!-- Background Decorative Flowers -->
+  <div class="absolute top-10 left-6 text-amber-200/60 pointer-events-none animate-pulse-slow">
+    <svg width="40" height="40" viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50 20 C40 0, 10 20, 30 40 C0 40, 0 70, 30 70 C10 90, 40 100, 50 80 C60 100, 90 90, 70 70 C100 70, 100 40, 70 40 C90 20, 60 0, 50 20 Z" />
+      <circle cx="50" cy="50" r="12" fill="#fef08a" />
+    </svg>
+  </div>
+  <div class="absolute top-36 right-8 text-sky-200/60 pointer-events-none animate-pulse-slow" style="animation-delay: 1.5s;">
+    <svg width="48" height="48" viewBox="0 0 100 100" fill="currentColor">
+      <path d="M50 20 C40 0, 10 20, 30 40 C0 40, 0 70, 30 70 C10 90, 40 100, 50 80 C60 100, 90 90, 70 70 C100 70, 100 40, 70 40 C90 20, 60 0, 50 20 Z" />
+      <circle cx="50" cy="50" r="12" fill="#bae6fd" />
+    </svg>
+  </div>
+
+  <div class="max-w-6xl w-full flex flex-col items-center relative z-10">
+    
+    <!-- Header Banner with Mascot -->
+  <div class="max-w-6xl w-full flex flex-col items-center relative z-10">
+    
+    <!-- Header Banner with Mascot -->
+    <div class="relative bg-white/95 border-3 border-sky-300 rounded-3xl px-8 py-4 mb-10 text-center shadow-lg shadow-sky-100/50 w-full max-w-2xl flex items-center justify-center gap-4">
+      
+      <!-- Top Left Cinnamoroll Floating Mascot -->
+      <div class="hidden sm:block absolute -left-16 -top-10 animate-float">
+        <svg width="110" height="90" viewBox="0 0 160 120" fill="none">
+          <!-- Fluffy Cloud Under Cinnamoroll -->
+          <path d="M 25 90 Q 20 75 35 75 Q 45 60 65 65 Q 80 55 100 65 Q 115 60 125 75 Q 140 80 130 95 Q 110 105 80 102 Q 40 105 25 90 Z" fill="#ffffff" opacity="0.85" stroke="#bae6fd" stroke-width="2"/>
+          
+          <!-- Long Floppy Ears -->
+          <!-- Left Long Ear -->
+          <path d="M 50 50 C 20 40, -10 55, 5 80 C 18 95, 45 78, 55 65 Z" fill="#ffffff" stroke="#93c5fd" stroke-width="2.5"/>
+          <path d="M 45 52 C 22 45, 2 57, 12 75 C 22 85, 42 72, 50 63 Z" fill="#fce7f3" opacity="0.6"/>
+          
+          <!-- Right Long Ear -->
+          <path d="M 110 50 C 140 40, 170 55, 155 80 C 142 95, 115 78, 105 65 Z" fill="#ffffff" stroke="#93c5fd" stroke-width="2.5"/>
+          <path d="M 115 52 C 138 45, 158 57, 148 75 C 138 85, 118 72, 110 63 Z" fill="#fce7f3" opacity="0.6"/>
+          
+          <!-- Chubby Puppy Head -->
+          <ellipse cx="80" cy="58" rx="38" ry="26" fill="#ffffff" stroke="#93c5fd" stroke-width="2.5"/>
+          
+          <!-- Blue Eyes -->
+          <ellipse cx="65" cy="56" rx="4" ry="5" fill="#38bdf8"/>
+          <ellipse cx="95" cy="56" rx="4" ry="5" fill="#38bdf8"/>
+          <circle cx="66" cy="54" r="1.5" fill="#ffffff"/>
+          <circle cx="96" cy="54" r="1.5" fill="#ffffff"/>
+          
+          <!-- Rosy Cheeks -->
+          <ellipse cx="56" cy="64" rx="8" ry="4.5" fill="#fbcfe8"/>
+          <ellipse cx="104" cy="64" rx="8" ry="4.5" fill="#fbcfe8"/>
+          
+          <!-- Cute W Smile -->
+          <path d="M 75 62 Q 80 66 85 62" stroke="#0284c7" stroke-width="2" stroke-linecap="round" fill="none"/>
+          
+          <!-- Curly Cinnamon Roll Swirl Tail Peek -->
+          <path d="M 116 68 C 126 65, 128 78, 120 80 C 115 81, 115 74, 121 74" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <h1 class="text-3xl sm:text-4xl font-bold text-sky-700 tracking-wide flex items-center gap-2">
+          Mijn dagelijkse to-do lijst
+        </h1>
+        <p class="text-slate-400 text-sm sm:text-base italic font-medium mt-1">
+          Stap voor stap, elke dag weer
+        </p>
+      </div>
+
+      <!-- Top Right Cinnamoroll Mascot -->
+      <div class="w-20 h-16 sm:w-24 sm:h-20 flex-shrink-0 animate-float" style="animation-delay: 1s;">
+        <svg viewBox="0 0 150 110" fill="none" class="w-full h-full drop-shadow-sm">
+          <!-- Left Ear -->
+          <path d="M 45 45 C 18 35, -5 50, 8 72 C 20 86, 42 70, 50 58 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Right Ear -->
+          <path d="M 105 45 C 132 35, 155 50, 142 72 C 130 86, 108 70, 100 58 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Head -->
+          <ellipse cx="75" cy="52" rx="35" ry="24" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+          <!-- Eyes -->
+          <ellipse cx="61" cy="50" rx="3.5" ry="4.5" fill="#0284c7"/>
+          <ellipse cx="89" cy="50" rx="3.5" ry="4.5" fill="#0284c7"/>
+          <circle cx="62" cy="48.5" r="1.3" fill="#ffffff"/>
+          <circle cx="90" cy="48.5" r="1.3" fill="#ffffff"/>
+          <!-- Cheeks -->
+          <ellipse cx="52" cy="57" rx="7" ry="4" fill="#fbcfe8"/>
+          <ellipse cx="98" cy="57" rx="7" ry="4" fill="#fbcfe8"/>
+          <!-- Smile -->
+          <path d="M 70 56 Q 75 60 80 56" stroke="#0284c7" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <!-- Paws -->
+          <ellipse cx="63" cy="74" rx="6" ry="4" fill="#ffffff" stroke="#38bdf8" stroke-width="1.8"/>
+          <ellipse cx="87" cy="74" rx="6" ry="4" fill="#ffffff" stroke="#38bdf8" stroke-width="1.8"/>
+        </svg>
+      </div>
+
+    </div>
+
+    <!-- 4 Main Columns Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 w-full items-start">
+      
+      <!-- 1. OCHTEND (AM) - Light Blue Theme -->
+      <div class="relative bg-white/90 backdrop-blur-md border-2 border-sky-200 rounded-[28px] p-5 shadow-sm hover:shadow-md transition flex flex-col min-h-[500px]">
+        
+        <!-- Cinnamoroll Peek Left Top -->
+        <div class="absolute -top-14 -left-8 z-20 pointer-events-none animate-float">
+          <svg width="110" height="90" viewBox="0 0 150 110" fill="none">
+            <!-- Floppy Ear Left -->
+            <path d="M 45 42 C 15 28, -8 48, 8 72 C 22 88, 42 68, 52 56 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+            <!-- Floppy Ear Right -->
+            <path d="M 105 42 C 135 28, 158 48, 142 72 C 128 88, 108 68, 98 56 Z" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+            <!-- Head -->
+            <ellipse cx="75" cy="50" rx="36" ry="25" fill="#ffffff" stroke="#38bdf8" stroke-width="2.5"/>
+            <!-- Eyes -->
+            <ellipse cx="60" cy="48" rx="4" ry="5" fill="#0284c7"/>
+            <ellipse cx="90" cy="48" rx="4" ry="5" fill="#0284c7"/>
+            <circle cx="61" cy="46" r="1.5" fill="#ffffff"/>
+            <circle cx="91" cy="46" r="1.5" fill="#ffffff"/>
+            <!-- Blush -->
+            <ellipse cx="50" cy="56" rx="7" ry="4" fill="#fbcfe8"/>
+            <ellipse cx="100" cy="56" rx="7" ry="4" fill="#fbcfe8"/>
+            <!-- Smile -->
+            <path d="M 70 54 Q 75 58 80 54" stroke="#0284c7" stroke-width="2" stroke-linecap="round" fill="none"/>
+            <!-- Cinnamon Roll Curly Swirl Tail -->
+            <path d="M 108 62 C 122 58, 126 72, 116 76 C 110 78, 108 70, 116 70" stroke="#fcd34d" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+
+        <!-- Header Banner -->
+        <div class="bg-[#d4eafd] text-[#2563eb] px-4 py-2.5 rounded-2xl font-bold flex justify-between items-center mb-5 heading-font text-lg shadow-sm">
+          <span class="flex items-center gap-2">
+            Ochtend
+          </span>
+          <span class="text-xs font-bold px-2.5 py-0.5 bg-white/80 rounded-lg text-sky-600">AM</span>
+        </div>
+        
+        <!-- Checklist Items -->
+        <div class="space-y-4 flex-1">
+          <label class="todo-item flex items-start gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-1" class="custom-checkbox text-sky-400 border-sky-300 mt-0.5">
+            <div class="flex flex-col">
+              <span class="item-text font-bold text-slate-700 group-hover:text-sky-600 transition">Aankleden</span>
+              <span class="text-[11px] leading-tight text-slate-400 font-semibold mt-1">
+                Elke dag een schone onderbroek • elke 2 dagen een schoon hemd
+              </span>
+            </div>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-2" class="custom-checkbox text-sky-400 border-sky-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-sky-600 transition">Een glas water drinken</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-3" class="custom-checkbox text-sky-400 border-sky-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-sky-600 transition">Eén boterham eten</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-4" class="custom-checkbox text-sky-400 border-sky-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-sky-600 transition">Tanden poetsen</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-5" class="custom-checkbox text-sky-400 border-sky-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-sky-600 transition">Haar borstelen</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- 2. MIDDAG (PM) - Light Mint Green Theme -->
+      <div class="relative bg-white/90 backdrop-blur-md border-2 border-emerald-200 rounded-[28px] p-5 shadow-sm hover:shadow-md transition flex flex-col min-h-[500px]">
+        
+        <!-- Header Banner -->
+        <div class="bg-[#d1f2d9] text-[#059669] px-4 py-2.5 rounded-2xl font-bold flex justify-between items-center mb-5 heading-font text-lg shadow-sm">
+          <span>Middag</span>
+          <span class="text-xs font-bold px-2.5 py-0.5 bg-white/80 rounded-lg text-emerald-600">PM</span>
+        </div>
+
+        <!-- Checklist Items -->
+        <div class="space-y-4 flex-1">
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-6" class="custom-checkbox text-emerald-400 border-emerald-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-emerald-600 transition">Maandag: Judo</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-7" class="custom-checkbox text-emerald-400 border-emerald-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-emerald-600 transition">Woensdag: BSO</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-8" class="custom-checkbox text-emerald-400 border-emerald-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-emerald-600 transition">Donderdag: Turnen</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-9" class="custom-checkbox text-emerald-400 border-emerald-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-emerald-600 transition">Zaterdag: Dansen</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-10" class="custom-checkbox text-emerald-400 border-emerald-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-emerald-600 transition">Zondag: Kinderdienst</span>
+          </label>
+        </div>
+
+        <!-- Bottom Bunny Deco -->
+        <div class="flex justify-end pr-2 pt-2 opacity-70">
+          <svg width="45" height="35" viewBox="0 0 120 90" fill="none">
+            <path d="M 35 35 C 15 25, -2 40, 10 60 C 20 72, 38 58, 45 48 Z" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
+            <path d="M 85 35 C 105 25, 122 40, 110 60 C 100 72, 82 58, 75 48 Z" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
+            <ellipse cx="60" cy="45" rx="28" ry="19" fill="#ffffff" stroke="#a7f3d0" stroke-width="2"/>
+            <circle cx="50" cy="43" r="2.5" fill="#059669"/>
+            <circle cx="70" cy="43" r="2.5" fill="#059669"/>
+            <ellipse cx="43" cy="48" rx="4" ry="2.5" fill="#fbcfe8"/>
+            <ellipse cx="77" cy="48" rx="4" ry="2.5" fill="#fbcfe8"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 3. AVOND (PM) - Light Purple / Lavender Theme -->
+      <div class="relative bg-white/90 backdrop-blur-md border-2 border-purple-200 rounded-[28px] p-5 shadow-sm hover:shadow-md transition flex flex-col min-h-[500px]">
+        
+        <!-- Header Banner -->
+        <div class="bg-[#e5ddf8] text-[#7c3aed] px-4 py-2.5 rounded-2xl font-bold flex justify-between items-center mb-5 heading-font text-lg shadow-sm">
+          <span>Avond</span>
+          <span class="text-xs font-bold px-2.5 py-0.5 bg-white/80 rounded-lg text-purple-600">PM</span>
+        </div>
+
+        <!-- Checklist Items -->
+        <div class="space-y-4 flex-1">
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-11" class="custom-checkbox text-purple-400 border-purple-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-purple-600 transition">Om de dag 's avonds in bad</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-12" class="custom-checkbox text-purple-400 border-purple-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-purple-600 transition">Vitamine-snoepje nemen</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-13" class="custom-checkbox text-purple-400 border-purple-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-purple-600 transition">Tanden poetsen</span>
+          </label>
+
+          <label class="todo-item flex items-center gap-3 cursor-pointer group">
+            <input type="checkbox" id="task-14" class="custom-checkbox text-purple-400 border-purple-300">
+            <span class="item-text font-bold text-slate-700 group-hover:text-purple-600 transition">Een boekje lezen</span>
+          </label>
+        </div>
+
+        <!-- Moon / Sleeping Bunny Deco -->
+        <div class="flex justify-end pr-2 pt-2 opacity-80">
+          <svg width="45" height="35" viewBox="0 0 120 90" fill="none">
+            <path d="M85 15 A 20 20 0 0 1 100 50 A 20 20 0 1 1 85 15 Z" fill="#ddd6fe"/>
+            <path d="M 30 45 C 10 38, -5 50, 8 68 C 18 78, 32 65, 38 56 Z" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+            <path d="M 80 45 C 100 38, 115 50, 102 68 C 92 78, 78 65, 72 56 Z" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+            <ellipse cx="55" cy="52" rx="26" ry="18" fill="#ffffff" stroke="#c4b5fd" stroke-width="2"/>
+            <path d="M 47 52 Q 51 56 55 52" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" fill="none"/>
+          </svg>
+        </div>
+      </div>
+
+      <!-- 4. CHALLENGE & GELUKT BOX - Yellow Theme -->
+      <div class="flex flex-col gap-5 min-h-[500px]">
+        
+        <!-- Challenge Card -->
+        <div class="bg-white/90 backdrop-blur-md border-2 border-amber-200 rounded-[28px] p-5 shadow-sm hover:shadow-md transition flex-1 relative">
+          
+          <!-- Header Banner -->
+          <div class="bg-[#fdf3d0] text-[#d97706] px-4 py-2.5 rounded-2xl font-bold flex justify-between items-center mb-5 heading-font text-lg shadow-sm">
+            <span>Challenge</span>
+            <span class="text-amber-500 font-extrabold text-xl">★</span>
+          </div>
+
+          <!-- Checklist Items -->
+          <div class="space-y-4">
+            <label class="todo-item flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="task-15" class="custom-checkbox text-amber-400 border-amber-300 mt-0.5">
+              <span class="item-text font-bold text-slate-700 group-hover:text-amber-600 transition">Mijn motivational water bottle leegdrinken</span>
+            </label>
+
+            <label class="todo-item flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="task-16" class="custom-checkbox text-amber-400 border-amber-300 mt-0.5">
+              <span class="item-text font-bold text-slate-700 group-hover:text-amber-600 transition">Doordeweeks geen YouTube</span>
+            </label>
+
+            <label class="todo-item flex items-start gap-3 cursor-pointer group">
+              <input type="checkbox" id="task-17" class="custom-checkbox text-amber-400 border-amber-300 mt-0.5">
+              <span class="item-text font-bold text-slate-700 group-hover:text-amber-600 transition">Na spelen ruim ik mijn spullen op</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- "Gelukt? Zet een vinkje!" Box -->
+        <div class="relative bg-white/90 backdrop-blur-md border-2 border-amber-200 rounded-2xl p-4 text-center shadow-sm">
+          <h2 class="text-amber-600 font-bold text-lg heading-font">
+            Gelukt? Zet een vinkje!
+          </h2>
+          <p class="text-slate-400 text-xs font-semibold mt-0.5">
+            Morgen krijg je weer een nieuwe kans.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Reset / Clear Button connected to LocalStorage Clear -->
+    <div class="mt-8 mb-4">
+      <button 
+        id="resetBtn"
+        class="bg-white/90 hover:bg-white text-slate-600 font-bold text-xs py-2.5 px-6 rounded-full border-2 border-slate-200 shadow-sm transition hover:scale-105 active:scale-95 hover:border-sky-300 flex items-center gap-2">
+        <span>✨ Reset alle vinkjes voor een nieuwe dag</span>
+      </button>
+    </div>
+
+  </div>
+
+  <!-- JavaScript for LocalStorage Caching -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const STORAGE_KEY = 'cinnamoroll_todo_state_v1';
+      const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+      const resetBtn = document.getElementById('resetBtn');
+
+      // 1. Load saved state from LocalStorage on page load
+      function loadSavedState() {
+        try {
+          const savedData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+          checkboxes.forEach(cb => {
+            if (cb.id && savedData[cb.id] !== undefined) {
+              cb.checked = savedData[cb.id];
+            }
+          });
+        } catch (e) {
+          console.error('Could not load saved todo states', e);
+        }
+      }
+
+      // 2. Save current state to LocalStorage
+      function saveState() {
+        const state = {};
+        checkboxes.forEach(cb => {
+          if (cb.id) {
+            state[cb.id] = cb.checked;
+          }
+        });
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      }
+
+      // 3. Attach change listener to each checkbox
+      checkboxes.forEach(cb => {
+        cb.addEventListener('change', saveState);
+      });
+
+      // 4. Hook up Reset Button
+      resetBtn.addEventListener('click', () => {
+        checkboxes.forEach(cb => {
+          cb.checked = false;
+        });
+        localStorage.removeItem(STORAGE_KEY);
+      });
+
+      // Initial state load
+      loadSavedState();
+    });
+  </script>
+
+</body>
+</html>
